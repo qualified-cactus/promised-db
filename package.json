@@ -1,7 +1,7 @@
 {
   "name": "@qualified-cactus/promised-db",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Typescript wrapper for IndexedDB",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "author": "qualified-cactus",
   "license": "MIT",
+  "repository": "https://github.com/qualified-cactus/promised-db",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
     "typescript": "^5.3.3"
