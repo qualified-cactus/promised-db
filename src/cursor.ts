@@ -6,13 +6,12 @@ interface CursorProvider {
     openCursor(query?: IDBValidKey | IDBKeyRange | null, direction?: IDBCursorDirection): IDBRequest<IDBCursorWithValue | null>
 }
 
-interface CursorValue1<T extends IDBValidKey, K extends IDBValidKey> {
+export interface CursorValue1<T extends IDBValidKey, K extends IDBValidKey> {
     key: T
     primaryKey: K
-
 }
 
-interface CursorValue2<V, T extends IDBValidKey, K extends IDBValidKey> extends CursorValue1<T, K> {
+export interface CursorValue2<V, T extends IDBValidKey, K extends IDBValidKey> extends CursorValue1<T, K> {
     value: V
     delete(): Promise<void>
     update(newValue: V): Promise<T>
