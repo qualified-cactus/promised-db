@@ -19,7 +19,7 @@ interface CursorValue2<V, T extends IDBValidKey, K extends IDBValidKey> extends 
 }
 
 export interface CursorIterationOption<IK, PK> {
-    from: {
+    from?: {
         key?: IK
         primaryKey?: PK
     }
@@ -40,17 +40,17 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
     _iterateCursor<C extends IDBCursor>(
         cursorRequester: () => IDBRequest<C | null>,
         action: (cursor: C) => Promise<void>,
-        options: CursorIterationOption<IK, PK>
+        options?: CursorIterationOption<IK, PK>
     ): Promise<void> {
-        if (options.offset && options.offset < 1) {
+        if (options?.offset && options.offset < 1) {
             throw Error("offset must be greater than 0")
         }
-        if (options.limit && options.limit < 1) {
+        if (options?.limit && options.limit < 1) {
             throw Error("limit must be greater than 0")
         }
         return new Promise((resolve, reject) => {
-            let offsetNotApplied = Boolean(options.offset)
-            let fromIndexNotApplied = Boolean(options.from.key)
+            let offsetNotApplied = Boolean(options?.offset)
+            let fromIndexNotApplied = Boolean(options?.from?.key)
             let curCount = 0
 
             const rq = cursorRequester()
@@ -58,17 +58,17 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
                 const cursor = rq.result
                 if (cursor) {
                     if (fromIndexNotApplied) {
-                        if (options.from.primaryKey) {
+                        if (options?.from?.primaryKey) {
                             cursor.continuePrimaryKey(options.from.key!, options.from.primaryKey)
                         } else {
-                            cursor.continue(options.from.key)
+                            cursor.continue(options?.from?.key)
                         }
                         fromIndexNotApplied = false
                         return
                     }
 
                     if (offsetNotApplied) {
-                        cursor.advance(options.offset! - 1)
+                        cursor.advance(options!.offset! - 1)
                         offsetNotApplied = false
                         return
                     }
@@ -78,7 +78,7 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
                         cursor.continue()
                     })
 
-                    if (options.limit && curCount >= options.limit) {
+                    if (options?.limit && curCount >= options.limit) {
                         resolve()
                     }
                 } else {
@@ -94,10 +94,10 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
 
     iterateKeys(
         action: (v: CursorValue1<IK, PK>) => Promise<void>,
-        options: CursorIterationOption<IK, PK>,
+        options?: CursorIterationOption<IK, PK>,
     ): Promise<void> {
         return this._iterateCursor(
-            () => this._cursorProvider.openKeyCursor(options.query, options.direction),
+            () => this._cursorProvider.openKeyCursor(options?.query, options?.direction),
             async (cursor) => {
                 await action({
                     key: cursor.key as IK,
@@ -110,10 +110,10 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
     
     iterateValues(
         action: (v: CursorValue2<T, IK, PK>) => Promise<void>,
-        options: CursorIterationOption<IK, PK>,
+        options?: CursorIterationOption<IK, PK>,
     ) {
         return this._iterateCursor(
-            () => this._cursorProvider.openCursor(options.query, options.direction),
+            () => this._cursorProvider.openCursor(options?.query, options?.direction),
             async (cursor) => {
                 await action({
                     value: cursor.value,
