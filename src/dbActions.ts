@@ -30,12 +30,30 @@ export class ObjectStore<T, PK extends IDBValidKey> {
         return dbPromise(this.#objectStore.get(key))
     }
 
+    getFirstInRange(query: IndexKeyRange<PK>): Promise<T | undefined> {
+        return dbPromise(this.#objectStore.get(query))
+    }
+
+    /**
+     * @throws {NoResultError} when no object with {@link key} is found
+     */
+    async requireGet(key: PK): Promise<T> {
+        const result = await dbPromise(this.#objectStore.get(key))
+        if (result) {
+            return result
+        } else throw new NoResultError()
+    }
+
     getAll(): Promise<T[]> {
         return dbPromise(this.#objectStore.getAll())
     }
 
     delete(key: PK): Promise<undefined> {
         return dbPromise(this.#objectStore.delete(key))
+    }
+
+    deleteRange(query: IndexKeyRange<PK>): Promise<undefined> {
+        return dbPromise(this.#objectStore.delete(query))
     }
 
     clear(): Promise<undefined> {
@@ -82,7 +100,7 @@ export class ObjectStore<T, PK extends IDBValidKey> {
  */
 export class Index<O, IK extends IDBValidKey, PK extends IDBValidKey> {
     #index: IDBIndex
-    
+
     /**
      * @readonly
      */
@@ -90,7 +108,7 @@ export class Index<O, IK extends IDBValidKey, PK extends IDBValidKey> {
 
     constructor(index: IDBIndex) {
         this.#index = index
-        this.iterator = new CursorIterator(index) 
+        this.iterator = new CursorIterator(index)
     }
 
     get(key: IK): Promise<O | undefined> {
@@ -99,6 +117,16 @@ export class Index<O, IK extends IDBValidKey, PK extends IDBValidKey> {
 
     getFirstInRange(query: IndexKeyRange<IK>): Promise<O | undefined> {
         return dbPromise(this.#index.get(query))
+    }
+
+    /**
+    * @throws {NoResultError} when no object with {@link key} is found
+    */
+    async requireGet(key: PK): Promise<O> {
+        const result = await dbPromise(this.#index.get(key))
+        if (result) {
+            return result
+        } else throw new NoResultError()
     }
 
     getAll(query?: IndexKeyRange<IK>, count?: number): Promise<O[]> {
@@ -136,4 +164,8 @@ export class Transaction {
     objectStore<T, K extends IDBValidKey>(objectDef: ObjectStoreDef<T, K>): ObjectStore<T, K> {
         return new ObjectStore<T, K>(this.#transaction.objectStore(objectDef.name))
     }
+}
+
+class NoResultError extends Error {
+
 }
