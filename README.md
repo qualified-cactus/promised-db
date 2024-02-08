@@ -1,4 +1,4 @@
-# Promised DB - An Typescript wrapper for IndexedDB
+# Promised DB - A Typescript wrapper for IndexedDB
 
 It is highly recommended to use this library with Typescript.
 
@@ -87,6 +87,9 @@ async function doOperation() {
             nameIndex.iterator.iterateKeys(async (cursor)=>{
                 console.log(cursor.key)  // access index key
                 console.log(cursor.primaryKey) // access primary key
+            },{
+                query: TodoTask.NameIndex.lowerBound("a"), // iterate over name starting with "a",
+                direction: "prev" // descending order
             })
 
             // iterate over objects of index / objectstore 

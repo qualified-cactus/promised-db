@@ -73,6 +73,9 @@ async function doOperation() {
 
                 await cursor.update({...cursor.value, name: "new name"}) // update value using cursor
                 await cursor.delete() // or delete value using cursor
+            },{
+                query: TodoTask.NameIndex.lowerBound("a"), // iterate over name starting with "a",
+                direction: "prev" // descending order
             })
         }
     )
