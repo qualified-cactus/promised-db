@@ -44,6 +44,10 @@ export class ObjectStore<T, PK extends IDBValidKey> {
         } else throw new NoResultError()
     }
 
+    getAllKeys(): Promise<PK[]> {
+        return dbPromise(this.#objectStore.getAllKeys())
+    }
+
     getAll(): Promise<T[]> {
         return dbPromise(this.#objectStore.getAll())
     }
