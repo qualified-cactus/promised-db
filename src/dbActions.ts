@@ -18,23 +18,40 @@ export class ObjectStore<T, PK extends IDBValidKey> {
         this.iterator = new CursorIterator(objectStore)
     }
 
+    /**
+     * A {@link Promise} version of {@link IDBObjectStore.add}
+     */
     add(value: Partial<T>, key?: PK): Promise<PK> {
         return dbPromise(this.#objectStore.add(value, key)) as Promise<PK>
     }
 
+    /**
+     * A {@link Promise} version of {@link IDBObjectStore.put}
+     */
     put(value: Partial<T>, key?: PK): Promise<PK> {
         return dbPromise(this.#objectStore.put(value, key)) as Promise<PK>
     }
 
+    /**
+     * Get an object with a primary key
+     * @param key the primary key of the object
+     * @returns undefined if no object is found
+     */
     get(key: PK): Promise<T | undefined> {
         return dbPromise(this.#objectStore.get(key))
     }
 
+    /**
+     * Find the first object in a primary key range 
+     * @param query the primary key range
+     * @returns undefined if no object is found
+     */
     getFirstInRange(query: IndexKeyRange<PK>): Promise<T | undefined> {
         return dbPromise(this.#objectStore.get(query))
     }
 
     /**
+     * It is {@link get} but will throw if no object is found
      * @throws {NoResultError} when no object with {@link key} is found
      */
     async requireGet(key: PK): Promise<T> {
@@ -44,22 +61,45 @@ export class ObjectStore<T, PK extends IDBValidKey> {
         } else throw new NoResultError()
     }
 
-    getAll(): Promise<T[]> {
-        return dbPromise(this.#objectStore.getAll())
+    /**
+     * A {@link Promise} version of {@link IDBObjectStore.getAll}
+     */
+    getAll(query?: IndexKeyRange<PK>, count?: number): Promise<T[]> {
+        return dbPromise(this.#objectStore.getAll(query, count))
     }
 
+    /**
+     * Get all primary keys of this object store.
+     * This method is a promise-version of {@link IDBObjectStore.getAllKeys}.
+     */
+    getAllPrimaryKeys(query?: IndexKeyRange<PK>, count?: number): Promise<PK[]> {
+        return dbPromise(this.#objectStore.getAllKeys(query, count)) as Promise<PK[]>
+    }
+
+    /**
+     * A {@link Promise} version of {@link IDBObjectStore.delete}
+     */
     delete(key: PK): Promise<undefined> {
         return dbPromise(this.#objectStore.delete(key))
     }
 
+    /**
+     * A {@link Promise} version of {@link IDBObjectStore.delete}
+     */
     deleteRange(query: IndexKeyRange<PK>): Promise<undefined> {
         return dbPromise(this.#objectStore.delete(query))
     }
 
+    /**
+     * A {@link Promise} version of {@link IDBObjectStore.clear}
+     */
     clear(): Promise<undefined> {
         return dbPromise(this.#objectStore.clear())
     }
 
+    /**
+     * A {@link Promise} version of {@link IDBObjectStore.count}
+     */
     count(): Promise<number> {
         return dbPromise(this.#objectStore.count())
     }
@@ -130,6 +170,10 @@ export class Index<O, IK extends IDBValidKey, PK extends IDBValidKey> {
     }
 
     getAll(query?: IndexKeyRange<IK>, count?: number): Promise<O[]> {
+        return dbPromise(this.#index.getAll(query, count))
+    }
+
+    getAllPrimaryKeys(query?: IndexKeyRange<PK>, count?: number): Promise<PK[]> {
         return dbPromise(this.#index.getAll(query, count))
     }
 

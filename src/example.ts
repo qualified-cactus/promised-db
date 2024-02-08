@@ -1,21 +1,6 @@
-# Promised DB - An Typescript wrapper for IndexedDB
+import { ObjectStoreDef, IndexDef, DatabaseDef, Database } from "./dbDeclarations"
 
-It is highly recommended to use this library with Typescript.
-
-## How to use
-
-See [example.ts](src/example.ts) for full example.
-
-### Step 0: Get this package from NPM
-
-```shell
-npm install @qualified-cactus/promised-db
-```
-
-### Step 1: Define your data structure  
-
-```typescript
-export namespace TodoTask {
+namespace TodoTask {
     export interface Type {
         id: number
         name: string
@@ -38,11 +23,7 @@ export namespace TodoTask {
         "completed", // index path
     )
 }
-```
 
-### Step 2: Define your database
-
-```typescript
 const TodoTaskDbDef = new DatabaseDef(
     "todo-tasks-db", // db name 
     1, // version
@@ -56,12 +37,7 @@ const TodoTaskDbDef = new DatabaseDef(
         }
     }
 )
-```
 
-
-### Step 3: Open DB and start a transaction
-
-```typescript
 async function doOperation() {
 
     const db: Database = await TodoTaskDbDef.open()
@@ -101,12 +77,3 @@ async function doOperation() {
         }
     )
 }
-```
-
-_WARNING_: Perform other long-running async operation (fetching api, etc...) inside transaction will cause `TransactionInactiveError`. 
-The reason is that IndexedDB autocommit when there is no pending database operation within a brief period of time.
-
-
-
-
-

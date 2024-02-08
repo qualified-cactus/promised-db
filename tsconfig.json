@@ -3,6 +3,9 @@
     "include": [
         "src/**/*"
     ],
+    "exclude": [
+        "src/example.ts"
+    ],
     "compilerOptions": {
         "declaration": true,
         "outDir": "dist"
