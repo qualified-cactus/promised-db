@@ -2,9 +2,9 @@
 
 It is highly recommended to use this library with Typescript.
 
-## How to use
+[API Documentation](https://qualified-cactus.github.io/promised-db/)
 
-See [example.ts](src/example.ts) for full example.
+## How to use
 
 ### Step 0: Get this package from NPM
 
@@ -113,8 +113,5 @@ async function doOperation() {
 
 _WARNING_: Perform other long-running async operation (fetching api, etc...) inside transaction will cause `TransactionInactiveError`. 
 The reason is that IndexedDB autocommit when there is no pending database operation within a brief period of time.
-
-
-
 
 

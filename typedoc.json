@@ -5,8 +5,7 @@
     "excludePrivate": true,
     "excludeProtected": true,
     "cleanOutputDir": true,
-    "gitRemote": "github",
-    "gitRevision": "master",
+    "disableSources": true,
     "cacheBust": true,
     "hideGenerator": true,
 }
