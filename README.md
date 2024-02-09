@@ -15,7 +15,7 @@ npm install @qualified-cactus/promised-db
 ### Step 1: Define your data structure  
 
 ```typescript
-export namespace TodoTask {
+namespace TodoTask {
     export interface Type {
         id: number
         name: string
@@ -34,7 +34,7 @@ export namespace TodoTask {
         { unique: true } // index's options
     )
     export const CompletedIndex = new IndexDef<number>(
-        "todo-task-name-index", // index name
+        "todo-task-completed-index", // index name
         "completed", // index path
     )
 }

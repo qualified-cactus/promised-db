@@ -24,7 +24,7 @@ export interface CursorValue2<V, T extends IDBValidKey, K extends IDBValidKey> e
 export interface CursorIterationOption<IK, PK> {
     /**
      * Specify where the cursor should start from (inclusive).
-     * {@link IDBCursor.continue} is used if {@link primaryKey} is undefined.
+     * {@link IDBCursor.continue} is used if primaryKey is undefined.
      * If it is not, {@link IDBCursor.continuePrimaryKey} is used instead.
      */
     from?: {
