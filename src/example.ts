@@ -51,18 +51,23 @@ async function doOperation() {
             const completedIndex = todoTaskObjectStore.index(TodoTask.CompletedIndex)
             const task = await completedIndex.get(1)    
             if (task) {
-                todoTaskObjectStore.delete(task.id)
+                await todoTaskObjectStore.delete(task.id)
             }
 
             // key range can be created from Index definition
             const nameIndex = todoTaskObjectStore.index(TodoTask.NameIndex)
             // get all tasks with name greater than "bazz"
-            const tasksList = nameIndex.getAll(TodoTask.NameIndex.lowerBound("bazz"))
+            const tasksList = await nameIndex.getAll(TodoTask.NameIndex.lowerBound("bazz"))
 
             // iterate over keys of index / objectstore
             await nameIndex.iterator.iterateKeys(async (cursor)=>{
                 console.log(cursor.key)  // access index key
                 console.log(cursor.primaryKey) // access primary key
+
+                // break iteration if key equals "foo"
+                if (cursor.key === "foo") {
+                    return true // return true to break iteration early 
+                }
             })
 
             // iterate over objects of index / objectstore 

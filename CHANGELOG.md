@@ -1,3 +1,7 @@
+## 2.3.0
+- User can now break iteration when using `CursorIterator.iterateKeys`, 
+`CursorIterator.iterateValues` by return `true` from `action`.
+
 ## 2.2.0
 
 - Added `ObjectStore.getAllPrimaryKeys` and `Index.getAllPrimaryKeys`.
