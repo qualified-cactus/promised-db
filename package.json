@@ -6,13 +6,15 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf dist; tsc"
+    "build": "rm -rf dist; tsc; npm run docs",
+    "docs": "typedoc --readme README.md src"
   },
   "author": "qualified-cactus",
   "license": "MIT",
   "repository": "https://github.com/qualified-cactus/promised-db",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
+    "typedoc": "^0.25.7",
     "typescript": "^5.3.3"
   }
 }
