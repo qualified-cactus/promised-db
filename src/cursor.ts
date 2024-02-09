@@ -1,9 +1,12 @@
 import { IndexKeyRange } from "./dbDeclarations"
 import { dbPromise } from "./utils"
 
+type KeyCursorOpener = (query?: IDBValidKey | IDBKeyRange | null, direction?: IDBCursorDirection) => IDBRequest<IDBCursor | null>
+type CursorOpener = (query?: IDBValidKey | IDBKeyRange | null, direction?: IDBCursorDirection) => IDBRequest<IDBCursorWithValue | null>
+
 interface CursorProvider {
-    openKeyCursor(query?: IDBValidKey | IDBKeyRange | null, direction?: IDBCursorDirection): IDBRequest<IDBCursor | null>
-    openCursor(query?: IDBValidKey | IDBKeyRange | null, direction?: IDBCursorDirection): IDBRequest<IDBCursorWithValue | null>
+    openKeyCursor: KeyCursorOpener
+    openCursor: CursorOpener
 }
 
 export interface CursorValue1<T extends IDBValidKey, K extends IDBValidKey> {
@@ -50,7 +53,7 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
 
     #iterateCursor<C extends IDBCursor>(
         cursorRequester: () => IDBRequest<C | null>,
-        action: (cursor: C) => Promise<void>,
+        action: (cursor: C) => Promise<void|boolean>,
         options?: CursorIterationOption<IK, PK>
     ): Promise<void> {
         if (options?.offset && options.offset < 1) {
@@ -85,7 +88,11 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
                     }
 
                     curCount++
-                    action(cursor).then(() => {
+                    action(cursor).then((done) => {
+                        if (done) {
+                            resolve()
+                            return
+                        }
                         cursor.continue()
                     })
 
@@ -105,10 +112,11 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
 
     /**
      * Iterating over keys and primary keys. To update/delete, use {@link iterateValues} instead.
+     * @param action return true to break the iteration.
      * @param options see doc of {@link CursorIterationOption} to know how to use.
      */
     iterateKeys(
-        action: (v: CursorValue1<IK, PK>) => Promise<void>,
+        action: (v: CursorValue1<IK, PK>) => Promise<void|boolean>,
         options?: CursorIterationOption<IK, PK>,
     ): Promise<void> {
         return this.#iterateCursor(
@@ -126,10 +134,11 @@ export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
     /**
      * Iterating over key, primary keys and objects. 
      * You can also update or delete during iteration using {@link CursorValue2.update} or {@link CursorValue2.delete}.
+     * @param action return true to break the iteration.
      * @param options see doc of {@link CursorIterationOption} to know how to use.
      */
     iterateValues(
-        action: (v: CursorValue2<T, IK, PK>) => Promise<void>,
+        action: (v: CursorValue2<T, IK, PK>) => Promise<void|boolean>,
         options?: CursorIterationOption<IK, PK>,
     ) {
         return this.#iterateCursor(
