@@ -1,6 +1,6 @@
 {
   "name": "@qualified-cactus/promised-db",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "A Typescript wrapper for IndexedDB",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

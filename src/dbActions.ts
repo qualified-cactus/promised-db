@@ -53,7 +53,7 @@ export class ObjectStore<T, PK extends IDBValidKey> {
      */
     async requireGet(key: PK): Promise<T> {
         const result = await dbPromise(this.#objectStore.get(key))
-        if (result) {
+        if (result !== undefined) {
             return result
         } else throw new NoResultError()
     }
@@ -157,7 +157,7 @@ export class Index<O, IK extends IDBValidKey, PK extends IDBValidKey> {
     */
     async requireGet(key: PK): Promise<O> {
         const result = await dbPromise(this.#index.get(key))
-        if (result) {
+        if (result !== undefined) {
             return result
         } else throw new NoResultError()
     }
