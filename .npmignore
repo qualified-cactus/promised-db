@@ -1,1 +1,4 @@
 src
+docs
+.github
+typedoc.json
