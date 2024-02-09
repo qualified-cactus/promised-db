@@ -84,22 +84,22 @@ async function doOperation() {
             const tasksList = nameIndex.getAll(TodoTask.NameIndex.lowerBound("bazz"))
 
             // iterate over keys of index / objectstore
-            nameIndex.iterator.iterateKeys(async (cursor)=>{
+            await nameIndex.iterator.iterateKeys(async (cursor)=>{
                 console.log(cursor.key)  // access index key
                 console.log(cursor.primaryKey) // access primary key
-            },{
-                query: TodoTask.NameIndex.lowerBound("a"), // iterate over name starting with "a",
-                direction: "prev" // descending order
             })
 
             // iterate over objects of index / objectstore 
-            nameIndex.iterator.iterateValues(async (cursor)=>{
+            await nameIndex.iterator.iterateValues(async (cursor)=>{
                 console.log(cursor.key)  // access index key
                 console.log(cursor.primaryKey) // access primary key
                 console.log(cursor.value) // access object
 
                 await cursor.update({...cursor.value, name: "new name"}) // update value using cursor
                 await cursor.delete() // or delete value using cursor
+            },{
+                query: TodoTask.NameIndex.lowerBound("a"), // iterate over name starting with "a",
+                direction: "prev" // descending order
             })
         }
     )
