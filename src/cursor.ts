@@ -1,3 +1,4 @@
+import { Index, ObjectStore } from "./dbActions"
 import { IndexKeyRange } from "./dbDeclarations"
 import { dbPromise } from "./utils"
 
@@ -43,10 +44,18 @@ export interface CursorIterationOption<IK, PK> {
     direction?: IDBCursorDirection
 }
 
+/**
+ * Do not instantiate this class directly, instead 
+ * use {@link ObjectStore.iterator} or {@link Index.iterator} to get an instance of this class.
+ */
 export class CursorIterator<T, IK extends IDBValidKey, PK extends IDBValidKey> {
 
     #cursorProvider: CursorProvider
 
+    /**
+     * Do not instantiate this class directly, instead 
+     * use {@link ObjectStore.iterator} or {@link Index.iterator} to get an instance of this class.
+     */
     constructor(cursorProvider: CursorProvider) {
         this.#cursorProvider = cursorProvider
     }

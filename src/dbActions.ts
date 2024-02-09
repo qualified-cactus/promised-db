@@ -8,10 +8,7 @@ import { dbPromise } from "./utils"
 export class ObjectStore<T, PK extends IDBValidKey> {
     #objectStore: IDBObjectStore
 
-    /**
-     * @readonly
-     */
-    iterator: CursorIterator<T, PK, PK>
+    readonly iterator: CursorIterator<T, PK, PK>
 
     constructor(objectStore: IDBObjectStore) {
         this.#objectStore = objectStore
@@ -140,11 +137,7 @@ export class ObjectStore<T, PK extends IDBValidKey> {
  */
 export class Index<O, IK extends IDBValidKey, PK extends IDBValidKey> {
     #index: IDBIndex
-
-    /**
-     * @readonly
-     */
-    iterator: CursorIterator<O, IK, PK>
+    readonly iterator: CursorIterator<O, IK, PK>
 
     constructor(index: IDBIndex) {
         this.#index = index
