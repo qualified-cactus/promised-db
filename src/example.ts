@@ -19,7 +19,7 @@ namespace TodoTask {
         { unique: true } // index's options
     )
     export const CompletedIndex = new IndexDef<number>(
-        "todo-task-name-index", // index name
+        "todo-task-completed-index", // index name
         "completed", // index path
     )
 }
