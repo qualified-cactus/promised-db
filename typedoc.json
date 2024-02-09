@@ -3,7 +3,10 @@
     "entryPoints": ["./src/index.ts"],
     "out": "./docs",
     "excludePrivate": true,
+    "excludeProtected": true,
     "cleanOutputDir": true,
     "gitRemote": "github",
-    "gitRevision": "master"
+    "gitRevision": "master",
+    "cacheBust": true,
+    "hideGenerator": true,
 }
