@@ -1,3 +1,6 @@
+## 3.0.0
+- Remove get `getFirstInRange` method from index + objectstore
+
 ## 2.3.0
 - User can now break iteration when using `CursorIterator.iterateKeys`, 
 `CursorIterator.iterateValues` by return `true` from `action`.

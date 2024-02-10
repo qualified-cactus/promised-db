@@ -40,7 +40,7 @@ export interface CursorIterationOption<IK, PK> {
      * If specified, {@link IDBCursor.advance} is used before iteration.
      */
     offset?: number
-    query?: IndexKeyRange<IK>
+    query?: IK | IndexKeyRange<IK>
     direction?: IDBCursorDirection
 }
 
