@@ -25,7 +25,7 @@ export class ObjectStore<T, PK extends IDBValidKey> {
     /**
      * A {@link Promise} version of {@link IDBObjectStore.put}
      */
-    put(value: Partial<T>, key?: PK): Promise<PK> {
+    put(value: T, key?: PK): Promise<PK> {
         return dbPromise(this.#objectStore.put(value, key)) as Promise<PK>
     }
 
