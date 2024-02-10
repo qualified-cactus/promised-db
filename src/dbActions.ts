@@ -97,8 +97,8 @@ export class ObjectStore<T, PK extends IDBValidKey> {
     /**
      * A {@link Promise} version of {@link IDBObjectStore.count}
      */
-    count(): Promise<number> {
-        return dbPromise(this.#objectStore.count())
+    count(query?: IndexKeyRange<PK>): Promise<number> {
+        return dbPromise(this.#objectStore.count(query))
     }
 
     index<IT extends IDBValidKey>(indexDef: IndexDef<IT>): Index<T, IT, PK> {
