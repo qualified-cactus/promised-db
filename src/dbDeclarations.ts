@@ -39,7 +39,7 @@ export class Database {
         this.#db = db
     }
 
-    createObjectStore<T, K extends IDBValidKey>(objectDef: ObjectStoreDef<T, K>): ObjectStore<T, K> {
+    createObjectStore<T, K extends IDBValidKey, TNoKey>(objectDef: ObjectStoreDef<T, K, TNoKey>): ObjectStore<T, K, TNoKey> {
         return new ObjectStore(this.#db.createObjectStore(objectDef.name, objectDef.options))
     }
 
@@ -81,7 +81,7 @@ export class Database {
     }
 }
 
-export interface ObjectStoreDef<T, K extends IDBValidKey> {
+export interface ObjectStoreDef<T, K extends IDBValidKey, TNoKey=T> {
     name: string
     options?: IDBObjectStoreParameters
 }

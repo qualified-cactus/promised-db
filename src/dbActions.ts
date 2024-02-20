@@ -5,7 +5,7 @@ import { dbPromise } from "./utils"
 /**
  * {@link T} is the type of the object, {@link PK} is the type of the object's primary key.
  */
-export class ObjectStore<T, PK extends IDBValidKey> {
+export class ObjectStore<T, PK extends IDBValidKey, TNoKey> {
     #objectStore: IDBObjectStore
 
     readonly iterator: CursorIterator<T, PK, PK>
@@ -18,7 +18,7 @@ export class ObjectStore<T, PK extends IDBValidKey> {
     /**
      * A {@link Promise} version of {@link IDBObjectStore.add}
      */
-    add(value: Partial<T>, key?: PK): Promise<PK> {
+    add(value: TNoKey, key?: PK): Promise<PK> {
         return dbPromise(this.#objectStore.add(value, key)) as Promise<PK>
     }
 
@@ -199,8 +199,8 @@ export class Transaction {
         this.#transaction.commit()
     }
 
-    objectStore<T, K extends IDBValidKey>(objectDef: ObjectStoreDef<T, K>): ObjectStore<T, K> {
-        return new ObjectStore<T, K>(this.#transaction.objectStore(objectDef.name))
+    objectStore<T, K extends IDBValidKey, TNoKey>(objectDef: ObjectStoreDef<T, K, TNoKey>): ObjectStore<T, K, TNoKey> {
+        return new ObjectStore<T, K, TNoKey>(this.#transaction.objectStore(objectDef.name))
     }
 }
 
