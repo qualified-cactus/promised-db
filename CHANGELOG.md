@@ -1,3 +1,6 @@
+## 3.1.0
+- Improved type safety when adding object by explicitly add an option specify object's type without key.
+
 ## 3.0.0
 - Remove get `getFirstInRange` method from index + objectstore
 

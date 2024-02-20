@@ -1,12 +1,15 @@
 import { ObjectStoreDef, IndexDef, DatabaseDef, Database } from "./dbDeclarations"
 
 namespace TodoTask {
-    export interface Type {
-        id: number
+    export interface TypeWithoutKey {
         name: string
         completed: number // 0 for false, 1 for true
     }
-    export const ObjectStore: ObjectStoreDef<Type, number> = {
+    export interface Type extends TypeWithoutKey {
+        id: number
+    }
+
+    export const ObjectStore: ObjectStoreDef<Type, number, TypeWithoutKey> = {
         name: "todo-tasks",
         options: {
             keyPath: "id",
