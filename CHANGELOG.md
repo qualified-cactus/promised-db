@@ -1,3 +1,11 @@
+## 3.1.2
+- Further improved type safety of `ObjectStoreDef` and `ObjectStore`.
+- `DatabaseDef.open` will now throw `UpgradeAttemptBlockedError` if `onblocked` event occured.
+- Added `deleteDatabase` function.
+
+## 3.1.1
+- I forgot to rebuild this project before publishing 3.1.0 .
+
 ## 3.1.0
 - Improved type safety when adding object by explicitly add an option specify object's type without key.
 

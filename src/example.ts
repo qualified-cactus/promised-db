@@ -1,6 +1,7 @@
 import { ObjectStoreDef, IndexDef, DatabaseDef, Database } from "./dbDeclarations"
 
 namespace TodoTask {
+    // define TypeWithoutKey if you use auto-generated inline key(s)
     export interface TypeWithoutKey {
         name: string
         completed: number // 0 for false, 1 for true

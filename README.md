@@ -14,14 +14,22 @@ npm install @qualified-cactus/promised-db
 
 ### Step 1: Define your data structure  
 
+Use type `ObjectStoreDef` and  class `IndexDef` to define object store(s) and index(es) respectively.
+It is recommened to group related definitions in a namespace or module to avoid repetitive name 
+such as "TodoTaskTypeWithoutKey", "TodoTaskObjectStore", etc... 
+
 ```typescript
 namespace TodoTask {
-    export interface Type {
-        id: number
+    // define TypeWithoutKey if you use auto-generated inline key(s)
+    export interface TypeWithoutKey {
         name: string
         completed: number // 0 for false, 1 for true
     }
-    export const ObjectStore: ObjectStoreDef<Type, number> = {
+    export interface Type extends TypeWithoutKey {
+        id: number
+    }
+
+    export const ObjectStore: ObjectStoreDef<Type, number, TypeWithoutKey> = {
         name: "todo-tasks",
         options: {
             keyPath: "id",
@@ -41,6 +49,8 @@ namespace TodoTask {
 ```
 
 ### Step 2: Define your database
+
+Use the class `DatabaseDef` to define a database.
 
 ```typescript
 const TodoTaskDbDef = new DatabaseDef(

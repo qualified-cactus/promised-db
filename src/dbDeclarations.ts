@@ -2,9 +2,6 @@ import { ObjectStore, Transaction } from "./dbActions"
 
 export type DbUpgrader = (db: Database, oldVersion: number, newVersion: number | null) => void
 
-/**
- * 
- */
 export class DatabaseDef {
     #name: string
     #version: number
@@ -16,21 +13,35 @@ export class DatabaseDef {
         this.#upgrader = upgrader
     }
 
+    /**
+     * @throws {DOMException} if an error occured from creating database
+     * @throws {UpgradeAttemptBlockedError} if there is another openned connection to this database (maybe in anothe tab) 
+     *      that prevented this database's upgrade attempt 
+     */
     async open(): Promise<Database> {
         return new Promise((resolve, reject) => {
             const rq = window.indexedDB.open(this.#name, this.#version)
             const upgrader = this.#upgrader
-            rq.onupgradeneeded = function (event: IDBVersionChangeEvent) {
-                upgrader(new Database(this.result), event.oldVersion, event.newVersion)
-            }
-            rq.onsuccess = function () {
-                resolve(new Database(this.result))
-            }
-            rq.onerror = function () {
-                reject(this.error)
-            }
+            rq.onupgradeneeded = (event: IDBVersionChangeEvent) => upgrader(
+                new Database(rq.result), event.oldVersion, event.newVersion
+            )
+            rq.onsuccess = () => resolve(new Database(rq.result))
+            rq.onerror = () => reject(rq.error)
+            rq.onblocked = () => reject(new UpgradeAttemptBlockedError("up"))
         })
     }
+}
+
+export class UpgradeAttemptBlockedError extends Error {
+}
+
+export function deleteDatabase(databaseName: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        const rq = window.indexedDB.deleteDatabase(databaseName)
+        rq.onsuccess = () => resolve()
+        rq.onerror = () => reject(rq.error)
+    })
+
 }
 
 export class Database {
@@ -39,7 +50,7 @@ export class Database {
         this.#db = db
     }
 
-    createObjectStore<T, K extends IDBValidKey, TNoKey>(objectDef: ObjectStoreDef<T, K, TNoKey>): ObjectStore<T, K, TNoKey> {
+    createObjectStore<T extends TNoKey, K extends IDBValidKey, TNoKey>(objectDef: ObjectStoreDef<T, K, TNoKey>): ObjectStore<T, K, TNoKey> {
         return new ObjectStore(this.#db.createObjectStore(objectDef.name, objectDef.options))
     }
 
@@ -81,7 +92,7 @@ export class Database {
     }
 }
 
-export interface ObjectStoreDef<T, K extends IDBValidKey, TNoKey=T> {
+export interface ObjectStoreDef<T extends TNoKey, K extends IDBValidKey, TNoKey = T> {
     name: string
     options?: IDBObjectStoreParameters
 }
